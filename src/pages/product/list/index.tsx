@@ -7,6 +7,7 @@ import { PaginateDataType, UrlType } from "../../../interface/common";
 import { listProducts } from "../../../services/products";
 import { getQueryFromUrl } from "../../../utils/common.utils";
 import ProductsTable from "./components/products.table";
+import ProductSearch from "./components/product.search"
 
 
 const fixedListParams = {
@@ -93,6 +94,11 @@ const ProductList: FC = () => {
                     padding: '0.5rem',
                 }}
             >
+                <div style={{ marginBottom: '1rem' }}>
+                    <ProductSearch
+                        onSearch={(query: any) => loadProducts(query)}
+                    />
+                </div>
                 <div style={{ marginBottom: '1rem' }}>
                     <div
                         style={{

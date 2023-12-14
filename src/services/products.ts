@@ -15,4 +15,19 @@ const listProducts = (args?: ListProductApi) => {
   });
 };
 
-export { listProducts };
+type ContactSearchApi = {
+  searchTerm: string;
+};
+
+const searchContacts = (args: ContactSearchApi) => {
+  let url = config.BACKEND_BASE + PRODUCT.CONTACTS;
+  let query = {
+    search: args.searchTerm,
+    paginate: true,
+  };
+  return axios.get(url, {
+    params: query,
+  });
+};
+
+export { listProducts, searchContacts };
