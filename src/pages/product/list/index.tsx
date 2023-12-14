@@ -24,24 +24,18 @@ const ProductList: FC = () => {
     });
     const navigate = useNavigate();
     const location = useLocation();
-        const prevLocation = useRef<string | null>(null);
-
-
-    
+    const prevLocation = useRef<string | null>(null);
     
 
-        useEffect(() => {
-            const init = () => {
-                const queryParams = getQueryFromUrl(window.location.href);
-                // If the location is changed, load products with new query params
-                if (location.pathname + location.search !== prevLocation.current) {
-                    loadProducts(queryParams);
-                    prevLocation.current = location.pathname + location.search;
-                }
-            };
+    useEffect(() => {
+        const queryParams = getQueryFromUrl(window.location.href);
+        const currentLocation = location.pathname + location.search;
 
-            init();
-        }, [location]);
+        if (currentLocation !== prevLocation.current) {
+            loadProducts(queryParams);
+            prevLocation.current = currentLocation;
+        }
+    }, [location]);
 
     // Optimized function to load products
     const loadProducts = async (queryParams?: Record<string, any>) => {
@@ -49,7 +43,6 @@ const ProductList: FC = () => {
         try {
             const fixedListParams: any = {
                 paginate: true,
-                // Add other properties from ListProductApi if necessary
             };
             const resolution: any = await listProducts({ ...fixedListParams, ...queryParams });
             const url = resolution?.url ? new URL(resolution.url) : null;
@@ -116,7 +109,7 @@ const ProductList: FC = () => {
                     <ProductsTable list={products} loading={loading} />
                 </div>
                 <div>
-                    <Pagination next={pagination.next} prev={pagination.prev} />
+                    <Pagination next={pagination.next} prev={pagination.prev} onNextClick={handleNext} onPrevClick={handlePrev} />
                 </div>
             </div>
         </>

@@ -3,19 +3,19 @@ import { ColumnsType } from "antd/es/table";
 import { FC, useEffect, useState } from "react";
 import Product from "../../../../components/content/product.content";
 
-interface ProductTable {
-    list: any[];
-    loading?: boolean;
+interface Product {
+    sku: string;
+    name: string;
+    variantName: string;
 }
 
+interface ProductTable {
+    list: Product[];
+    loading?: boolean;
+}
 type TableRecord = {
     key: React.Key;
-    product: {
-        sku: string;
-        name: string;
-        variantName: string;
-    },
-
+    product: Product;
 }
 
 const ProductsTable: FC<ProductTable> = ({ list, loading }) => {

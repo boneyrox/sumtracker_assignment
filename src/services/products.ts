@@ -15,9 +15,9 @@ const listProducts = (args?: ListProductApi) => {
   })
     .then((response) => {
       // Generate URL with queries
-      const generatedUrl = new URL(url); // Use the 'url' variable instead of 'PRODUCT.LIST'
+      const generatedUrl = new URL(url); 
       Object.entries(query).forEach(([key, value]) => {
-        generatedUrl.searchParams.append(key, String(value)); // Convert value to string
+        generatedUrl.searchParams.append(key, String(value)); 
       });
 
       // Send URL along with the response

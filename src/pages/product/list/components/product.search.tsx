@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Dropdown, Menu, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { searchContacts } from '../../../../services/products';
+import { debounce } from '../../../../utils/common.utils';
 
 interface ProductSearchProps {
     onSearch: (query: string) => void;
@@ -13,8 +14,6 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        let timer: NodeJS.Timeout;
-
         const fetchSuggestions = async () => {
             if (searchTerm) {
                 setLoading(true);
@@ -30,17 +29,9 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
                 setSuggestions([]);
             }
         };
+        const debouncedFetchSuggestions = debounce(fetchSuggestions, 500);
+        debouncedFetchSuggestions();
 
-        const debounceSearch = () => {
-            clearTimeout(timer);
-            timer = setTimeout(fetchSuggestions, 300);
-        };
-
-        debounceSearch();
-
-        return () => {
-            clearTimeout(timer);
-        };
     }, [searchTerm]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
