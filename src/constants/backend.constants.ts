@@ -1,6 +1,6 @@
 const PRODUCT = {
-  LIST: "products/",
-  CONTACTS: "purchases/contacts/",
+  LIST: "products",
+  CONTACTS: "purchases/contacts",
 };
 
 

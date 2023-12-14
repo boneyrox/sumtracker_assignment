@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Dropdown, Menu, Button } from 'antd';
-import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import { searchContacts } from '../../../../services/products';
 
 interface ProductSearchProps {
@@ -19,8 +19,8 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
             if (searchTerm) {
                 setLoading(true);
                 try {
-                    const data = await searchContacts({ searchTerm });
-                    setSuggestions(data.data.results);
+                    const data:any = await searchContacts({ searchTerm });
+                    setSuggestions(data?.data?.results || []);
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
                 } finally {

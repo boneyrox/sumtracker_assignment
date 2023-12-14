@@ -9,10 +9,23 @@ type ListProductApi = {
 const listProducts = (args?: ListProductApi) => {
   let url = config.BACKEND_BASE + PRODUCT.LIST;
 
-  let query = args?.query || {};
+  let query = args || {};
   return axios.get(url, {
     params: query,
-  });
+  })
+    .then((response) => {
+      // Generate URL with queries
+      const generatedUrl = new URL(url); // Use the 'url' variable instead of 'PRODUCT.LIST'
+      Object.entries(query).forEach(([key, value]) => {
+        generatedUrl.searchParams.append(key, String(value)); // Convert value to string
+      });
+
+      // Send URL along with the response
+      return {
+        url: generatedUrl.href,
+        data: response.data,
+      };
+    });
 };
 
 type ContactSearchApi = {
