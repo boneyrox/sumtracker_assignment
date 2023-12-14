@@ -19,7 +19,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
             if (searchTerm) {
                 setLoading(true);
                 try {
-                    const data:any = await searchContacts({ searchTerm });
+                    const data: any = await searchContacts({ searchTerm });
                     setSuggestions(data?.data?.results || []);
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
@@ -55,12 +55,13 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
     };
 
     const menu = (
-        <Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+        <Menu style={{ maxHeight: '200px', overflowY: 'auto' }} >
             {suggestions?.map((item: any) => (
                 <Menu.Item key={item.id} onClick={() => handleMenuClick(item.id)}>
                     {item.company_name}
                 </Menu.Item>
             ))}
+            {loading && <Menu.Item disabled>Loading...</Menu.Item>}
         </Menu>
     );
 
@@ -71,16 +72,16 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
 
     return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Dropdown overlay={menu} trigger={['click']}>
-            <Input
-                style={{ width: '25%', marginRight: '8px' }}
-                placeholder="Search products"
-                value={searchTerm}
-                onChange={handleInputChange}
-                suffix={<SearchOutlined />}
-            />
+            <Dropdown overlay={menu} trigger={['click']} >
+                <Input
+                    style={{ width: '25%', marginRight: '8px' }}
+                    placeholder="Search products"
+                    value={searchTerm}
+                    onChange={handleInputChange}
+                    suffix={<SearchOutlined />}
+                />
             </Dropdown>
-                <Button type="text" onClick={handleReset} >Reset</Button>
+            <Button onClick={handleReset} >Reset</Button>
         </div>
     );
 };

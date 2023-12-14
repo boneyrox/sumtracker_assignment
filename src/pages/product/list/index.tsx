@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState , useRef} from "react";
 import ResultString from "../../../components/content/result.content";
 import Heading from "../../../components/heading/basic.heading";
 import Pagination from "../../../components/pagination/basic.pagination";
@@ -8,7 +8,7 @@ import { listProducts } from "../../../services/products";
 import { getQueryFromUrl } from "../../../utils/common.utils";
 import ProductsTable from "./components/products.table";
 import ProductSearch from "./components/product.search"
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation} from "react-router-dom";
 
 const ProductList: FC = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -23,11 +23,25 @@ const ProductList: FC = () => {
         limit: PAGINATION_LIMIT
     });
     const navigate = useNavigate();
+    const location = useLocation();
+        const prevLocation = useRef<string | null>(null);
 
-    useEffect(() => {
-        const queryParams = getQueryFromUrl(window.location.href);
-        loadProducts(queryParams);
-    }, []);
+
+    
+    
+
+        useEffect(() => {
+            const init = () => {
+                const queryParams = getQueryFromUrl(window.location.href);
+                // If the location is changed, load products with new query params
+                if (location.pathname + location.search !== prevLocation.current) {
+                    loadProducts(queryParams);
+                    prevLocation.current = location.pathname + location.search;
+                }
+            };
+
+            init();
+        }, [location]);
 
     // Optimized function to load products
     const loadProducts = async (queryParams?: Record<string, any>) => {
@@ -38,10 +52,10 @@ const ProductList: FC = () => {
                 // Add other properties from ListProductApi if necessary
             };
             const resolution: any = await listProducts({ ...fixedListParams, ...queryParams });
-            const url = resolution.url;
+            const url = resolution?.url ? new URL(resolution.url) : null;
             if (url) {
-                const suffix = url.split('/');
-                navigate(`/${suffix[suffix.length - 1]}`);
+                const path = url.pathname + url.search;
+                navigate(path);
             }
             const res = resolution.data;
             if (res?.results) {
