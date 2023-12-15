@@ -13,9 +13,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchSuggestions = async () => {
-            if (searchTerm) {
+    const fetchSuggestions = async () => {
                 setLoading(true);
                 try {
                     const data: any = await searchContacts({ searchTerm });
@@ -25,13 +23,11 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
                 } finally {
                     setLoading(false);
                 }
-            } else {
-                setSuggestions([]);
-            }
         };
-        const debouncedFetchSuggestions = debounce(fetchSuggestions, 500);
-        debouncedFetchSuggestions();
 
+    useEffect(() => {
+        const debouncedFetchSuggestions = debounce(fetchSuggestions, 300);
+        debouncedFetchSuggestions();
     }, [searchTerm]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +43,12 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
 
     const menu = (
         <Menu style={{ maxHeight: '200px', overflowY: 'auto' }} >
+            {loading && <Menu.Item disabled>Loading...</Menu.Item>}
             {suggestions?.map((item: any) => (
                 <Menu.Item key={item.id} onClick={() => handleMenuClick(item.id)}>
                     {item.company_name}
                 </Menu.Item>
             ))}
-            {loading && <Menu.Item disabled>Loading...</Menu.Item>}
         </Menu>
     );
 
@@ -66,8 +62,9 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ onSearch }) => {
             <Dropdown overlay={menu} trigger={['click']} >
                 <Input
                     style={{ width: '25%', marginRight: '8px' }}
-                    placeholder="Search products"
+                    placeholder="Search Contacts"
                     value={searchTerm}
+                    onClick={fetchSuggestions}
                     onChange={handleInputChange}
                     suffix={<SearchOutlined />}
                 />
